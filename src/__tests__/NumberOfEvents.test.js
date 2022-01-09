@@ -21,5 +21,12 @@ describe('<NumberOfEvents/> component', () => {
     );
   });
 
+  test('should change state of numberOfEvents', () => {
+    const val = { target: {value: 12}};
+    NumberOfEventsWrapper.find('.number-of-events').simulate('change', val);
+    expect(NumberOfEventsWrapper.state('numberOfEvents')).toBe(12);
+  })
+  
+
   
 });
