@@ -1,24 +1,27 @@
 import React, {Component} from "react";
 
 class NumberOfEvents extends Component {
-  state = {
-    numberOfEvents: 16,
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      number: 16
+    };
+  };
+  handleInputChanged = (event) => {
+    const value = event.target.value
+    this.setState({
+      number: value,
+    });
+    
+    if (this.props.updateNumberOfEvents)
+      this.props.updateNumberOfEvents(value);
+
   }
 
-  handleInputChanged = (event) => {
-    const value = event.target.value;
-    if (value < 1 || value > 16) {
-      this.setState({
-        numberOfEvents: '',
-
-      })
-    } else {
-      this.setState({
-        numberOfEvents: value,
-
-      })
-    }
-  };
+  RemoveNonNumeric = (text) => {
+    return text.replace(/[^0-9]/g, '');
+  }
 
   render() {
     return (
@@ -28,9 +31,9 @@ class NumberOfEvents extends Component {
         type='number'
         name='number'
         className="number-of-events"
-        placeholder={this.state.numberOfEvents}
-        value={this.props.numberOfEvents}
-        onChange={(e) => this.handleInputChanged(e)}
+        placeholder={this.state.number}
+        value={this.state.number}
+        onChange={this.handleInputChanged}
         />
       </div>
     )
