@@ -1,27 +1,34 @@
 import React, {Component} from "react";
+import { WarnAlert } from "./Alert";
 
 class NumberOfEvents extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      number: 16
+      numberOfEvents: 16,
+      infoText:''
     };
   };
+
+
   handleInputChanged = (event) => {
-    const value = event.target.value
-    this.setState({
-      number: value,
-    });
-    
-    if (this.props.updateNumberOfEvents)
-      this.props.updateNumberOfEvents(value);
+    const value = event.target.value;
+    if (value < 1 || value > 32) {
+      this.setState({
+        numberOfEvents: 16,
+        infoText: 'Please enter a number between 1 and 16',
+      })
+    } else {
+      this.setState({
+        numberOfEvents: value,
+        infoText: '',
+      });
+    }
+    this.props.updateNumberOfEvents(event.target.value);
+  };
 
-  }
 
-  RemoveNonNumeric = (text) => {
-    return text.replace(/[^0-9]/g, '');
-  }
 
   render() {
     return (
@@ -31,10 +38,11 @@ class NumberOfEvents extends Component {
         type='number'
         name='number'
         className="number-of-events"
-        placeholder={this.state.number}
-        value={this.state.number}
-        onChange={this.handleInputChanged}
+        min='0'
+        max='32'
+        onChange={(event) => this.handleInputChanged(event)}
         />
+        <WarnAlert text={this.state.infoText}/>
       </div>
     )
   }

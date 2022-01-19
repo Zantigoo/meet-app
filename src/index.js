@@ -9,7 +9,7 @@ atatus.config('6ceeaa4aa0fc49ccb1c96e36d437a22f').install();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App/>
   </React.StrictMode>,
   document.getElementById('root')
 );
