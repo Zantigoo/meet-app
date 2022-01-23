@@ -1,5 +1,8 @@
 import React from "react";
 import './WelcomeScreen.css';
+import {Button} from '@mui/material'
+
+
 function WelcomeScreen(props) {
   return props.showWelcomeScreen ?
     (
@@ -11,20 +14,16 @@ function WelcomeScreen(props) {
           developers
         </h4>
         <div className="button_cont" align="center">
-          <div class="google-btn">
-            <div class="google-icon-wrapper">
-              <img
-                class="google-icon"
-                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                alt="Google sign-in"
-              />
-            </div>
-            <button onClick={() => { props.getAccessToken() }}
+          <div className="google-btn">
+
+            <Button onClick={() => { props.getAccessToken() }}
               rel="nofollow noopener"
-              class="btn-text"
+              className="btn-text"
+              style={{color:'#FD768C', backgroundColor: '#514B6C', marginBottom: '20px'}}
+              variant="contained"
             >
               <b>Sign in with google</b>
-            </button>
+            </Button>
           </div>
         </div>
         <a

@@ -8,7 +8,7 @@ class EventList extends Component {
     return (
       <Grid container spacing={2} className='EventList'>
         {events.map((event) =>
-          <Grid xs={12} md={4} item key={event.id}>
+          <Grid sm={12} item key={event.id}>
             <Event event={event} />
           </Grid>
         )}
