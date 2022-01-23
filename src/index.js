@@ -5,11 +5,14 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import * as atatus from 'atatus-spa';
+import CssBaseline from '@mui/material/CssBaseline'
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <App/>
+    <CssBaseline>
+      <App />
+    </CssBaseline>
   </React.StrictMode>,
   document.getElementById('root')
 );

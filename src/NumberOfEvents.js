@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { WarnAlert } from "./Alert";
+import { WarnAlert } from "./BasicAlert";
 
 class NumberOfEvents extends Component {
   constructor(props) {

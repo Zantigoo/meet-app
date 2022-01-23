@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import {Button, Card, CardActions, CardContent} from '@mui/material';
 
 class Event extends Component {
 
@@ -19,7 +19,8 @@ class Event extends Component {
     const {collapsed} = this.state;
     return (
 
-      <div className="event">
+      <Card style={{backgroundColor : '#5977B1'}} variant="outlined" className="event">
+        <CardContent>
         <h2 className="summary">{event.summary}</h2>
         <p className="startDate">
           {event.start.dateTime} ({event.start.timeZone})
@@ -27,11 +28,16 @@ class Event extends Component {
         <p className="location">
           @{event.summary} | {event.location}
         </p>
-        <button className={`${collapsed ? "show" : "hide"}Details`}
+        </CardContent>
+        <CardActions>
+        <Button 
+          style={{color: '#FD768C'}}
+          className={`${collapsed ? "show" : "hide"}Details`}
           onClick={this.handleClick}
         >
           {collapsed ? "Show Details" : "Hide Details"}
-        </button>
+        </Button>
+        </CardActions>
         {!collapsed &&
             <div className={`extraDetails ${this.state.collapsed ? "hide" : "show"}`}>
                 <h3>About the event:</h3>
@@ -41,8 +47,7 @@ class Event extends Component {
                 <p className="eventDescription">{event.description}</p>
             </div>
           }
-
-      </div>
+      </Card>
     )
   }
 }

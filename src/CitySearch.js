@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { InfoAlert } from './Alert';
+import { InfoAlert } from './BasicAlert';
 
 
 class CitySearch extends Component {
@@ -26,26 +26,28 @@ class CitySearch extends Component {
     if (suggestions.length === 0) {
       this.setState({
         query: value,
-        infoText: 'Can not find the city you are looking for...',
+        infoText: 'City Not Found',
+        open: true,
       });
     } else {
       return this.setState({
         query: value, 
         suggestions, 
-        infoText:''
+        infoText:'',
+        open: false
        });
     }
   };
   render() {
     return (
       <div className="CitySearch">
-        <InfoAlert text={this.state.infoText}/>
+        <InfoAlert text={this.state.infoText} open={this.state.open}/>
         <input
           onFocus={ () => { this.setState({ showSuggestions: true }) }}
           onChange={this.handleInputChanged}
           type="text"
           className="city"
-          placeholder={this.state.query}
+          placeholder='Search for City'
           value={this.state.query}
         />
         <ul 

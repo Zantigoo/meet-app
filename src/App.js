@@ -1,15 +1,28 @@
 import React, { Component } from 'react';
 import {
-  ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import './App.css';
 import './nprogress.css';
 import EventList from './EventList';
 import CitySearch from './CitySearch'
-import { extractLocations, getEvents } from './api';
+import { getEvents, extractLocations, checkToken, getAccessToken } from
+  './api';
 import NumberOfEvents from './NumberOfEvents';
-import { ErrorAlert } from "./Alert";
+import { ErrorAlert } from "./BasicAlert";
 import EventGenre from './EventGenre';
+import WelcomeScreen from './WelcomeScreen';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+//TO DO LIST
+// RE-ADD WELCOME SCREEN
+// ADD LOGO PNG
+
+const logo = require('./MeetBanner.png')
 
 class App extends Component {
 
@@ -18,7 +31,8 @@ class App extends Component {
     events: [],
     locations: [],
     numberOfEvents: 16,
-    location: 'all'
+    location: 'all',
+    showWelcomeScreen: undefined
   }
 
   getData = () => {
@@ -31,16 +45,21 @@ class App extends Component {
     return data;
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.mounted = true;
-    getEvents().then((events) => {
-      if (this.mounted) {
-        this.setState({
-          events: events.slice(0, this.state.numberOfEvents),
-          locations: extractLocations(events),
-        });
-      }
-    });
+    const accessToken = localStorage.getItem('access_token');
+    const isTokenValid = (await checkToken(accessToken)).error ? false :
+      true;
+    const searchParams = new URLSearchParams(window.location.search);
+    const code = searchParams.get("code");
+    this.setState({ showWelcomeScreen: !(code || isTokenValid) });
+    if ((code || isTokenValid) && this.mounted) {
+      getEvents().then((events) => {
+        if (this.mounted) {
+          this.setState({ events, locations: extractLocations(events) });
+        }
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -67,10 +86,12 @@ class App extends Component {
   };
 
   render() {
+    if (this.state.showWelcomeScreen === undefined) return <div className="App" />
+
     return (
       <div className="App">
         {!navigator.onLine ? (<ErrorAlert text='You are offline!' />) : (<ErrorAlert text=' ' />)}
-        
+        <img src={logo} alt='Meet-App Logo' style={{ marginBottom: '50px' }} />
         <CitySearch
           locations={this.state.locations}
           updateEvents={this.updateEvents}
@@ -79,28 +100,45 @@ class App extends Component {
           numberOfEvents={this.state.numberOfEvents}
           updateNumberOfEvents={this.updateNumberOfEvents}
         />
-      <div className='data-vis-wrapper'>
-        <EventGenre events={this.state.events} />
-        <h4>Events in each city</h4>
-        <ResponsiveContainer height={400}>
-          <ScatterChart
-            width={800}
-            height={400}
-            margin={{
-              top: 20, right: 20, bottom: 20, left: 20,
-            }}
+        <Accordion sx={{ background: '#514B6C', marginBottom: 3, margin: 2 }} >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
           >
-            <CartesianGrid />
-            <XAxis type="category" dataKey="city" name="city" />
-            <YAxis type="number" dataKey="number" name="Number of Events" allowDecimals={false} />
-            <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-            <Scatter data={this.getData()} fill="#8884d8" />
-          </ScatterChart>
-        </ResponsiveContainer>
-        </div>
+            <Typography style={{ color: '#FD768C', fontWeight: 'bold' }}>Data Charts</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <div className='data-vis-wrapper'>
+
+              <EventGenre events={this.state.events} />
+              <ResponsiveContainer height={400}>
+                <BarChart
+                  width={500}
+                  height={300}
+                  data={this.getData()}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid stroke="#FD768C" />
+                  <XAxis type="category" dataKey="city" name="city" stroke="#FD768C" />
+                  <YAxis type="number" dataKey="number" stroke="#FD768C" name="Number of Events" allowDecimals={false} />
+                  <Tooltip wrapperStyle={{ width: 100, backgroundColor: '#ccc' }} />
+                  <Bar dataKey="number" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </AccordionDetails>
+        </Accordion>
         <EventList
           events={this.state.events}
         />
+        <WelcomeScreen showWelcomeScreen={this.state.showWelcomeScreen}
+          getAccessToken={() => { getAccessToken() }} />
       </div>
     );
   }

@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
+import {Grid} from '@mui/material';
 import Event from './Event';
 
 class EventList extends Component {
   render() {
     const { events } = this.props;
     return (
-      <ul className='EventList'>
+      <Grid container spacing={2} className='EventList'>
         {events.map((event) =>
-          <li key={event.id}>
+          <Grid xs={12} md={4} item key={event.id}>
             <Event event={event} />
-          </li>
+          </Grid>
         )}
-      </ul>
+      </Grid>
     );
   }
 }
